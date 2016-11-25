@@ -28,5 +28,26 @@
 	}
 
 ```
+* prevDate(num) : 获取num月前的日期对象
+* nextDate(num) : 获取num月后的日期对象
+* cache() : 获取当前日期数据
+* restore() : 恢复缓存的日期数据
+
+```
+	let date = calendar.prevDate(); //--获取上个月对象
+	calendar.cache()  //---保存当前日期
+	calendar.setDate(date);
+	calendar.getDate()
+	calendar.restore() //--恢复到之前的日期
+	calendar.getDate();
+
+
+```
+now() : 当前时间戳
+size() : 日历天数
+week() : 当前星期
+firstWeek() : 日历的第一个星期
+lastWeek() : 日历的最后一个星期
+
 
 
