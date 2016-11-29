@@ -5,9 +5,12 @@
 ```
 	//---实例化对象
 	import Calendar from 'calendar';
+	let calendar = new Calendar(new Date(),"+8:00");
 
+	//---或者，注意事项：防止默认日期和时区的引起的村务，时区参数必须跟日期参数一起传入;
+	import Calendar from 'calendar';
 	let calendar = new Calendar();
-	
+
 ```
 
 方法
@@ -30,6 +33,8 @@
 ```
 * prevDate(num) : 获取num月前的日期对象
 * nextDate(num) : 获取num月后的日期对象
+* setTimezone(str) : 设置时区 "+8:00"; "-8:00";
+* getTimezone() : 返回时区;
 * cache() : 缓存当前日期数据
 * restore() : 恢复缓存的日期数据
 
@@ -65,5 +70,52 @@
 
 
 ```
+* getRelativeDate(num,type) : 获取相对当前时间num(正向后，负向前)长度的日期对象；type包含"day","week","month","year";
+
+```
+	let date = calendar.getRelativeDate(1,'month');
+
+	console.log(date);
+
+	{
+		props:{},
+		spread:[],
+		date : date
+
+	}
+
+```
+
+* getRelativeDates(num,type) : 获取相对当前时间num(正向后，负向前)长度的日期对象数组；type包含"day","week","month","year";
+
+```
+	let date = calendar.getRelativeDates(1,'month');
+
+	console.log(date);
+
+	[date1,date2,date3,date4,......];
 
 
+```
+
+* getDiffByDate(date) : 获取两个日期的天数差；返回数据
+
+```
+	let date = calendar.getDiffByDate(1,'month');
+
+	console.log(calendar.getDiffByDate(date.date));
+	
+	输出：31
+
+```
+
+* transformTimezone(timezone) : 转化为timezone时区的日历；
+
+* format(str) : 返回str连接的时间字符串 "2016-05-08 21:00:00";
+
+* suffix(num) : 对小于10的数字加上前缀返回字符串：
+
+```
+	console.log(calendar.suffix(5)) // '05';
+ 
+```

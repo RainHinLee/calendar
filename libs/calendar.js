@@ -4,8 +4,9 @@
 */
 export default class Calendar{
 
-	constructor(date) {  
+	constructor(date,timezone) {  //--date标准的Date对象；timezone : '+8:00'和"-8:00"
 		this.date = date || new Date();
+		this.timezone = timezone || this.generatorTimezoon();
 	}
 
 	//---更改date对象
@@ -29,6 +30,26 @@ export default class Calendar{
 			spread:[year,month,day,hours,minute,second],
 			date,
 		}
+	}
+
+	getTimezone(){  //---获取时区
+		return this.timezone
+	}
+
+	setTimezone(zone){ //---设置时区
+		this.timezone = zone
+	}
+
+	generatorTimezoon(){ //--计算时区
+		let offsetTime = -1 * this.date.getTimezoneOffset();
+		let surplus = Math.abs(offsetTime%60);
+
+		if(offsetTime>=0){ //--东时区
+			return `+${Math.floor(offsetTime/60)}:${surplus==0 ? "00" : surplus}`
+		}else{ //---西时区
+			return `${Math.ceil(offsetTime/60)}:${surplus==0 ? "00" : surplus}`
+		}
+
 	}
 
 	//--上num个月的日期对象
@@ -247,9 +268,14 @@ export default class Calendar{
 	getRelativeDate(num,type='day'){
 		let days = 0;
 
-		if(type=='year'){ //--年转化为月
-			num *= 12;
-			type = 'month'
+		if(type=='year'){
+			num *=12;
+			type = 'month';
+		}
+
+		if(type=='week'){
+			num *= 7;
+			type = 'day';
 		}
 
 		switch(type){
@@ -274,16 +300,13 @@ export default class Calendar{
 		};
 
 		let array = this.getRelativeDates(days);  //---返回天数
-		let start = array[0], end = array[array.length-1];
+		let end = array[array.length-1];
 		let result= {};
 
 		this.cache(); //--缓存数据
-		this.setDate(start);
-		result['start'] = this.getDate();
 		this.setDate(end);
-		result['end'] = this.getDate();
+		result = this.getDate();
 		this.restore(); //---恢复数据
-
 		return result;
 	}
 
@@ -293,12 +316,24 @@ export default class Calendar{
 		return Math.ceil(times / size);		
 	}
 
+	transformTimezone(target){   //---转化为target时区日期 "+8:00","-8:00"时区
+		let from = this.timezone.split(':'); 
+		let to = target.split(':');
+		let diff = (Number(to[0]) - Number(from[0]))* 60+(Number(to[1]) - Number(from[1]));
+		
+		let timestamp = this.now() + diff * 60 * 1000;
+
+		return new Date(timestamp);
+	}
+
 	cache(){  //--缓存当前时间，以便切换日期
-		this.cacheDate = this.date
+		this.cacheDate = this.date;
+		this.cacheTimezone = this.timezone;
 	}
 
 	restore(){  //--恢复当当前时间
-		this.setDate(this.cacheDate)
+		this.setDate(this.cacheDate);
+		this.setTimezone(this.cacheTimezone);
 	}
 
 	format(str='-'){  //---日期字符串表示,str分隔符
