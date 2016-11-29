@@ -7,7 +7,7 @@
 	import Calendar from 'calendar';
 	let calendar = new Calendar(new Date(),"+8:00");
 
-	//---或者，注意事项：防止默认日期和时区的引起的村务，时区参数必须跟日期参数一起传入;
+	//---无参数，默认使用当前时间；
 	import Calendar from 'calendar';
 	let calendar = new Calendar();
 
